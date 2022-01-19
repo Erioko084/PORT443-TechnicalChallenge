@@ -36,7 +36,7 @@ def main():
     dispatcher.add_handler(CommandHandler('help', help_command))
 
     # Allow message handler to listen to normal messages and respond accordingly
-    dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, send_dadjoke))
+    dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, send_dad_joke))
 
     # Start the bot
     updater.start_polling()
@@ -55,7 +55,7 @@ def help_command(update: Update, context: CallbackContext) -> None:
     update.message.reply_text('Usage: Say \"Hello\" for dad joke')
 
 
-def send_dadjoke(update: Update, context: CallbackContext) -> None:
+def send_dad_joke(update: Update, context: CallbackContext) -> None:
     # Sends a random dad joke if user says "Hello" (case insensitive), else user is prompted to use /help command.
     if update.message.text.lower() == 'hello':
         update.message.reply_text(Dadjoke().joke)
