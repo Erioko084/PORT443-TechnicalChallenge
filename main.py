@@ -18,33 +18,8 @@ from telegram import Update
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
 import logging
 
-def start(update: Update, context: CallbackContext) -> None:
-    # Welcomes user and prompts them to use /help command.
 
-    user = update.effective_user
-    new_line = '\n'
-
-    update.message.reply_markdown_v2(
-        fr'Hi {user.mention_markdown_v2()}\! {new_line}For usage instructions, type /help'
-    )
-
-def help_command(update: Update, context: CallbackContext) -> None:
-    # Instructs the user on usage
-
-    update.message.reply_text('Usage: Say \"Hello\" for dad joke')
-
-def send_dadjoke(update: Update, context: CallbackContext) -> None:
-
-    # Retrieve a random joke from dadjokes.io
-    dad_joke = Dadjoke().joke
-
-    # Sends the dad joke if user says "Hello" (case insensitive), else user is prompted to use /help command.
-    if update.message.text.lower() == 'hello':
-        update.message.reply_text(dad_joke)
-    else:
-        update.message.reply_text('For usage instructions, type /help')
 def main():
-
     # Get token for telegram API from environmental variable to prevent leaking it on Git
     load_dotenv()
     API_TOKEN = os.getenv('API_TOKEN')
@@ -66,6 +41,27 @@ def main():
     # Start the bot
     updater.start_polling()
     updater.idle()
+
+
+def start(update: Update, context: CallbackContext) -> None:
+    # Greets user by name and prompts them to use /help command for instructions.
+    new_line = '\n'
+    update.message.reply_markdown_v2(
+        fr'Hi {update.effective_user.mention_markdown_v2()}\! {new_line}For usage instructions, type /help')
+
+
+def help_command(update: Update, context: CallbackContext) -> None:
+    # Instructs the user on usage
+    update.message.reply_text('Usage: Say \"Hello\" for dad joke')
+
+
+def send_dadjoke(update: Update, context: CallbackContext) -> None:
+    # Sends a random dad joke if user says "Hello" (case insensitive), else user is prompted to use /help command.
+    if update.message.text.lower() == 'hello':
+        update.message.reply_text(Dadjoke().joke)
+    else:
+        update.message.reply_text('For usage instructions, type /help')
+
 
 if __name__ == '__main__':
     main()
